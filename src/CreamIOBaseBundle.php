@@ -1,6 +1,6 @@
 <?php
 
-namespace CreamIO\UserBundle;
+namespace CreamIO\BaseBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
