@@ -1,7 +1,7 @@
 {
   "type": "symfony-bundle",
   "license": "proprietary",
-  "name": "qraimbault/creamio_symfony_basebundle",
+  "name": "creamio/symfony_basebundle",
   "description": "Core bundle for CreamIO bundles in symfony",
   "authors": [
     {
