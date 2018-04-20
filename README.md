@@ -27,15 +27,11 @@ Project tree
 .
 └── src
     ├── DependencyInjection
-    ├── EventSubscriber     # Exception 
-event subscriber
-    ├── Exceptions          # APIError and 
-APIException for error handling in API
+    ├── EventSubscriber     # Exception event subscriber
+    ├── Exceptions          # APIError and APIException for error handling in API
     ├── Resources
-    │   └── config          # Service 
-injection
-    └── Service             # API Service 
-handling JSON responses
+    │   └── config          # Service injection
+    └── Service             # API Service handling JSON responses
 ```
 
 [1]: 
