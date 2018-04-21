@@ -4,12 +4,10 @@ namespace CreamIO\BaseBundle\Service;
 
 use CreamIO\BaseBundle\Exceptions\APIError;
 use CreamIO\BaseBundle\Exceptions\APIException;
-use Doctrine\ORM\EntityManagerInterface;
 use GBProd\UuidNormalizer\UuidNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -40,9 +38,8 @@ class APIService
         $objectNormalizer = new ObjectNormalizer();
         $objectNormalizer->setIgnoredAttributes(['password', 'salt', 'passwordLegal', 'plainPassword']);
         $normalizers = [new DateTimeNormalizer('d-m-Y H:i:s', new \DateTimeZone('Europe/Paris')), $objectNormalizer, new UuidNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
 
-        return $serializer;
+        return new Serializer($normalizers, $encoders);
     }
 
     /**

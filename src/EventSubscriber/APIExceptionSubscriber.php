@@ -21,7 +21,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $e = $event->getException();
         if ($e instanceof APIException) {
@@ -35,7 +35,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
         }
 
         // Shitty fix for fucked up code from Symfony returning a 500 error on unauthenticated call to API (WTF ?)
-        if ((false !== mb_strpos($e->getFile(), 'Firewall/ExceptionListener.php')) && ('Full authentication is required to access this resource.' === $e->getMessage())) {
+        if (('Full authentication is required to access this resource.' === $e->getMessage()) && (false !== mb_strpos($e->getFile(), 'Firewall/ExceptionListener.php'))) {
             $APIError->setStatusCode(Response::HTTP_UNAUTHORIZED);
             $APIError->setType(APIError::UNAUTHORIZED_ACCESS);
             $APIError->setTitle(Response::$statusTexts[Response::HTTP_UNAUTHORIZED]);

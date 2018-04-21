@@ -9,11 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class APIError
 {
-    const INVALID_CONTENT_TYPE = 'Invalid content type, please send application/json content';
-    const INVALID_UUID_ERROR = 'Invalid id, format must be uuid';
-    const RESOURCE_NOT_FOUND = "The resource you have requested can't be found";
-    const VALIDATION_ERROR = 'Error while validating ressource insertion/update';
-    const UNAUTHORIZED_ACCESS = 'You must authenticate to access to this ressource';
+    public const INVALID_CONTENT_TYPE = 'Invalid content type, please send application/json content';
+    public const INVALID_UUID_ERROR = 'Invalid id, format must be uuid';
+    public const RESOURCE_NOT_FOUND = "The resource you have requested can't be found";
+    public const VALIDATION_ERROR = 'Error while validating ressource insertion/update';
+    public const UNAUTHORIZED_ACCESS = 'You must authenticate to access to this ressource';
 
     /**
      * Response status code.
