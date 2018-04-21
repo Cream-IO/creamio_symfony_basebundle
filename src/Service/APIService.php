@@ -93,7 +93,7 @@ class APIService
      *
      * @return JsonResponse
      */
-    public function successWithoutResults(string $id, int $statusCode, Request $request, Serializer $serializer): JsonResponse
+    public function successWithoutResults(string $id, int $statusCode, Request $request, Serializer $serializer = null): JsonResponse
     {
         if (null === $serializer) {
             $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
@@ -122,8 +122,11 @@ class APIService
      *
      * @return JsonResponse Success response
      */
-    public function successWithoutResultsRedirected(string $id, Request $request, int $statusCode, string $redirectionURL, Serializer $serializer): JsonResponse
+    public function successWithoutResultsRedirected(string $id, Request $request, int $statusCode, string $redirectionURL, Serializer $serializer = null): JsonResponse
     {
+        if (null === $serializer) {
+            $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        }
         $return = [
             'status' => 'success',
             'code' => $statusCode,
