@@ -20,8 +20,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * Handles all logical operations related to the API activites.
  *
  * Operated mainly on serialization/deserialization, JSON and API response
- *
- * @todo Add methods for PUT
  */
 class APIService
 {
@@ -36,7 +34,10 @@ class APIService
     {
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $objectNormalizer = new ObjectNormalizer();
-        $objectNormalizer->setIgnoredAttributes(['password', 'salt', 'passwordLegal', 'plainPassword']);
+        $objectNormalizer->setCircularReferenceLimit(1);
+        $objectNormalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
         $normalizers = [new DateTimeNormalizer('d-m-Y H:i:s', new \DateTimeZone('Europe/Paris')), $objectNormalizer, new UuidNormalizer()];
 
         return new Serializer($normalizers, $encoders);
