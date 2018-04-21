@@ -1,6 +1,6 @@
 {
   "type": "symfony-bundle",
-  "license": "cc by-nc-sa",
+  "license": "CC-BY-NC-SA",
   "name": "creamio/symfony_basebundle",
   "description": "Core bundle for CreamIO bundles in symfony",
   "authors": [
