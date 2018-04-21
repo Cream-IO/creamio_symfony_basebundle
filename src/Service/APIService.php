@@ -24,26 +24,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class APIService
 {
     /**
-     * Serializer generator.
-     *
-     * Allows to generate a serializer already including the UUIDSerializerHandler in the registered handlers
-     *
-     * @return Serializer Serializer instance
-     */
-    public function generateSerializer(): Serializer
-    {
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $objectNormalizer = new ObjectNormalizer();
-        $objectNormalizer->setCircularReferenceLimit(1);
-        $objectNormalizer->setCircularReferenceHandler(function ($object) {
-            return $object->getId();
-        });
-        $normalizers = [new DateTimeNormalizer('d-m-Y H:i:s', new \DateTimeZone('Europe/Paris')), $objectNormalizer, new UuidNormalizer()];
-
-        return new Serializer($normalizers, $encoders);
-    }
-
-    /**
      * Generates a JSONResponse for errored requests.
      *
      * This method is used for every methods since it handles all kind of errors
@@ -79,15 +59,19 @@ class APIService
      *
      * This method is used for GET method since it required to return results
      *
-     * @param mixed   $results    Datas to send as results, can be array of objects or a single object
-     * @param int     $statusCode Response code to send (Constants defined in Response::class)
-     * @param string  $resultsFor ID of the requested object, or identifier for collection requests
-     * @param Request $request    Handled HTTP request to get method from
+     * @param mixed      $results    Datas to send as results, can be array of objects or a single object
+     * @param int        $statusCode Response code to send (Constants defined in Response::class)
+     * @param string     $resultsFor ID of the requested object, or identifier for collection requests
+     * @param Request    $request    Handled HTTP request to get method from
+     * @param Serializer $serializer Serializer to use (optional)
      *
      * @return JsonResponse
      */
-    public function successWithResults($results, int $statusCode, string $resultsFor, Request $request): JsonResponse
+    public function successWithResults($results, int $statusCode, string $resultsFor, Request $request, Serializer $serializer = null): JsonResponse
     {
+        if (null === $serializer) {
+            $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        }
         $return = [
             'status' => 'success',
             'code' => $statusCode,
@@ -95,7 +79,7 @@ class APIService
             'results-for' => $resultsFor,
             'results' => $results,
         ];
-        $serializedReturn = $this->generateSerializer()->serialize($return, 'json');
+        $serializedReturn = $serializer->serialize($return, 'json');
 
         return new JsonResponse($serializedReturn, $statusCode, [], true);
     }
@@ -105,21 +89,25 @@ class APIService
      *
      * This method is used for DELETE, POST, PATCH and PUT methods since they do not need any result to return
      *
-     * @param string  $id         Ressource ID
-     * @param int     $statusCode Response code to send (Constants defined in Response::class)
-     * @param Request $request    Handled HTTP request to get method from
+     * @param string     $id         Ressource ID
+     * @param int        $statusCode Response code to send (Constants defined in Response::class)
+     * @param Request    $request    Handled HTTP request to get method from
+     * @param Serializer $serializer Serializer to use (optional)
      *
      * @return JsonResponse
      */
-    public function successWithoutResults(string $id, int $statusCode, Request $request): JsonResponse
+    public function successWithoutResults(string $id, int $statusCode, Request $request, Serializer $serializer): JsonResponse
     {
+        if (null === $serializer) {
+            $serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder()]);
+        }
         $return = [
             'status' => 'success',
             'code' => $statusCode,
             'request-method' => $request->getMethod(),
             'request-ressource-id' => $id,
         ];
-        $serializedReturn = $this->generateSerializer()->serialize($return, 'json');
+        $serializedReturn = $serializer->serialize($return, 'json');
 
         return new JsonResponse($serializedReturn, $statusCode, [], true);
     }
@@ -129,14 +117,15 @@ class APIService
      *
      * This method is used to handle ressource creation requests since those requests generates a Location header redirecting to the created ressource get URL
      *
-     * @param string  $id             Ressource ID
-     * @param Request $request        Handled HTTP request to get method from
-     * @param int     $statusCode     Response code to send (Constants defined in Response::class)
-     * @param string  $redirectionURL Location header URL
+     * @param string     $id             Ressource ID
+     * @param Request    $request        Handled HTTP request to get method from
+     * @param int        $statusCode     Response code to send (Constants defined in Response::class)
+     * @param string     $redirectionURL Location header URL
+     * @param Serializer $serializer     Serializer to use (optional)
      *
      * @return JsonResponse Success response
      */
-    public function successWithoutResultsRedirected(string $id, Request $request, int $statusCode, string $redirectionURL): JsonResponse
+    public function successWithoutResultsRedirected(string $id, Request $request, int $statusCode, string $redirectionURL, Serializer $serializer): JsonResponse
     {
         $return = [
             'status' => 'success',
@@ -144,7 +133,7 @@ class APIService
             'request-method' => $request->getMethod(),
             'request-ressource-id' => $id,
         ];
-        $serializedReturn = $this->generateSerializer()->serialize($return, 'json');
+        $serializedReturn = $serializer->serialize($return, 'json');
 
         return new JsonResponse($serializedReturn, Response::HTTP_CREATED, ['Location' => $redirectionURL], true);
     }
