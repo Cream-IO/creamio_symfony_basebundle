@@ -4,13 +4,10 @@ namespace CreamIO\BaseBundle\Service;
 
 use CreamIO\BaseBundle\Exceptions\APIError;
 use CreamIO\BaseBundle\Exceptions\APIException;
-use GBProd\UuidNormalizer\UuidNormalizer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\ConstraintViolation;
