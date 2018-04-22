@@ -21,6 +21,21 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class APIService
 {
     /**
+     * @var ValidatorInterface Injected validator service
+     */
+    private $validator;
+
+    /**
+     * APIService constructor.
+     *
+     * @param ValidatorInterface $validator Injected validator service
+     */
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    /**
      * Generates a JSONResponse for errored requests.
      *
      * This method is used for every methods since it handles all kind of errors
@@ -136,5 +151,20 @@ class APIService
         $serializedReturn = $serializer->serialize($return, 'json');
 
         return new JsonResponse($serializedReturn, Response::HTTP_CREATED, ['Location' => $redirectionURL], true);
+    }
+
+    /**
+     * Validates the file upload entity.
+     *
+     * @param mixed $entity Entity to validate
+     *
+     * @throws APIException If validation failed, contains violations list
+     */
+    public function validateEntity($entity): void
+    {
+        $validationErrors = $this->validator->validate($entity);
+        if (\count($validationErrors) > 0) {
+            throw $this->postError($validationErrors);
+        }
     }
 }

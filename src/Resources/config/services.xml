@@ -5,7 +5,9 @@
         http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <!-- SERVICES -->
-        <service id="cream_io_base.apiservice" class="CreamIO\BaseBundle\Service\APIService" />
+        <service id="cream_io_base.apiservice" class="CreamIO\BaseBundle\Service\APIService" >
+            <argument type="service" id="validator" />
+        </service>
         <service id="CreamIO\BaseBundle\Service\APIService" alias="cream_io_base.apiservice" />
         <!-- EVENTSUBSCRIBERS -->
         <service id="cream_io_base.event_subscriber.apiexception_subscriber" class="CreamIO\BaseBundle\EventSubscriber\APIExceptionSubscriber">
