@@ -9,6 +9,10 @@
             <argument type="service" id="validator" />
         </service>
         <service id="CreamIO\BaseBundle\Service\APIService" alias="cream_io_base.apiservice" />
+        <service id="cream_io_base.loggingservice" class="CreamIO\BaseBundle\Service\LoggingService">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+        <service id="CreamIO\BaseBundle\Service\LoggingService" alias="cream_io_base.loggingservice" />
         <!-- EVENTSUBSCRIBERS -->
         <service id="cream_io_base.event_subscriber.apiexception_subscriber" class="CreamIO\BaseBundle\EventSubscriber\APIExceptionSubscriber">
             <tag name="kernel.event_subscriber" />
