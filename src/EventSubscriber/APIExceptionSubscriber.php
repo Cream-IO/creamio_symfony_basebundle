@@ -4,6 +4,7 @@ namespace CreamIO\BaseBundle\EventSubscriber;
 
 use CreamIO\BaseBundle\Exceptions\APIError;
 use CreamIO\BaseBundle\Exceptions\APIException;
+use CreamIO\BaseBundle\Service\LoggerProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,21 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class APIExceptionSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var \Symfony\Bridge\Monolog\Logger Injected logger
+     */
+    private $logger;
+
+    /**
+     * APIExceptionSubscriber constructor.
+     *
+     * @param LoggerProvider $loggerProvider Injected logger provider
+     */
+    public function __construct(LoggerProvider $loggerProvider)
+    {
+        $this->logger = $loggerProvider->logger();
+    }
+
     /**
      * Actually converts the exception to JSON format and sets the response accordingly.
      *
@@ -34,12 +50,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
             );
         }
 
-        // Shitty fix for fucked up code from Symfony returning a 500 error on unauthenticated call to API (WTF ?)
-        if (('Full authentication is required to access this resource.' === $e->getMessage()) && (false !== mb_strpos($e->getFile(), 'Firewall/ExceptionListener.php'))) {
-            $APIError->setStatusCode(Response::HTTP_UNAUTHORIZED);
-            $APIError->setType(APIError::UNAUTHORIZED_ACCESS);
-            $APIError->setTitle(Response::$statusTexts[Response::HTTP_UNAUTHORIZED]);
-        }
+        $this->logger->error(sprintf('Exception thrown with error code %d', $APIError->getStatusCode()), $APIError->toArray());
 
         $response = new JsonResponse(
             $APIError->toArray(),
