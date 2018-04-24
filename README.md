@@ -17,8 +17,31 @@ requirements][1].
 Installation
 ------------
 
-Require the bundle from a symfony 4 
-application.
+Require the bundle from a symfony 4 application.
+
+You must configure the logger channel to log to database by modifying `config/packages/(dev|prod)/monolog.yaml` this way :
+```yaml
+    channels: ['db']
+    handlers:
+        db:
+            channels: ['db']
+            type: service
+            id: cream_io_base.loggingservice
+```
+
+You MUST NOT modify anything in this configuration, as the services are injected in the bundle for logger providing.
+
+Usage
+-----
+
+Autowire or inject `CreamIO\BaseBundle\Service\LoggerProvider` in your service/controller.  
+You can then log this way : 
+```php
+$logger = $loggerProvider->logger();
+$logger->info('My information to log', ['userId', $user->getId()]);    
+```
+
+The second parameter is the context, it can be an array of whatever you want to identify the logging context.
 
 Project tree
 ------------
