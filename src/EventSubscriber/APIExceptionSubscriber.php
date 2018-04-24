@@ -50,7 +50,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
             );
         }
 
-        $this->logger->error(sprintf('Exception thrown with error code %d', $APIError->getStatusCode()), $APIError->toArray());
+        $this->logger->error(sprintf($APIError->getType(), $APIError->getStatusCode()), $APIError->toArray());
 
         $response = new JsonResponse(
             $APIError->toArray(),

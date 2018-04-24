@@ -24,6 +24,7 @@
         <service id="CreamIO\BaseBundle\Service\LoggerRequestProcessor" alias="cream_io_base.loggerrequestprocessor" />
         <!-- EVENTSUBSCRIBERS -->
         <service id="cream_io_base.event_subscriber.apiexception_subscriber" class="CreamIO\BaseBundle\EventSubscriber\APIExceptionSubscriber">
+            <argument type="service" id="cream_io_base.loggerprovider" />
             <tag name="kernel.event_subscriber" />
         </service>
     </services>
