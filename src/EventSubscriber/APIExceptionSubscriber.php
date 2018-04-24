@@ -49,9 +49,9 @@ class APIExceptionSubscriber implements EventSubscriberInterface
                 $e->getMessage()
             );
         }
-
         $this->logger->error(sprintf($APIError->getType(), $APIError->getStatusCode()), $APIError->toArray());
-
+        $arrayToDisplay = $APIError->toArray();
+        unset($arrayToDisplay['additional-informations']['technical']);
         $response = new JsonResponse(
             $APIError->toArray(),
             $APIError->getStatusCode()
