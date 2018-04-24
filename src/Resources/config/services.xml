@@ -17,6 +17,11 @@
             <argument type="service" id="monolog.logger.db" />
         </service>
         <service id="CreamIO\BaseBundle\Service\LoggerProvider" alias="cream_io_base.loggerprovider" />
+        <service id="cream_io_base.loggerrequestprocessor" class="CreamIO\BaseBundle\Service\LoggerRequestProcessor">
+            <argument type="service" id="request_stack" />
+            <tag name="monolog.processor" method="processRecord" handler="db" />
+        </service>
+        <service id="CreamIO\BaseBundle\Service\LoggerRequestProcessor" alias="cream_io_base.loggerrequestprocessor" />
         <!-- EVENTSUBSCRIBERS -->
         <service id="cream_io_base.event_subscriber.apiexception_subscriber" class="CreamIO\BaseBundle\EventSubscriber\APIExceptionSubscriber">
             <tag name="kernel.event_subscriber" />
