@@ -41,14 +41,18 @@ class APIService
      *
      * This method is used for every methods since it handles all kind of errors
      *
-     * @param int    $responseCode Response code to send (Constants defined in Response::class)
-     * @param string $reason       Error reason to return
+     * @param int        $responseCode Response code to send (Constants defined in Response::class)
+     * @param string     $reason       Error reason to return
+     * @param null|array $additionnal  Additionnal informations
      *
      * @return APIException
      */
-    public function error(int $responseCode, string $reason): APIException
+    public function error(int $responseCode, string $reason, array $additionnal = []): APIException
     {
         $APIError = new APIError($responseCode, $reason);
+        foreach ($additionnal as $key => $info) {
+            $APIError->set($key, $info);
+        }
 
         return new APIException($APIError);
     }
