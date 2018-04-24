@@ -53,7 +53,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
         $arrayToDisplay = $APIError->toArray();
         unset($arrayToDisplay['additional-informations']['technical']);
         $response = new JsonResponse(
-            $APIError->toArray(),
+            $arrayToDisplay,
             $APIError->getStatusCode()
         );
         $response->headers->set('Content-Type', 'application/problem+json');
