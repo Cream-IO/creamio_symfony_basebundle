@@ -49,6 +49,8 @@ class DatabaseLog
     private $extra;
 
     /**
+     * Id getter.
+     *
      * @return mixed
      */
     public function getId()
@@ -57,6 +59,8 @@ class DatabaseLog
     }
 
     /**
+     * Message getter.
+     *
      * @return null|string
      */
     public function getMessage(): ?string
@@ -65,6 +69,8 @@ class DatabaseLog
     }
 
     /**
+     * Message setter.
+     *
      * @param string $message
      *
      * @return DatabaseLog
@@ -77,6 +83,8 @@ class DatabaseLog
     }
 
     /**
+     * Level getter.
+     *
      * @return null|string
      */
     public function getLevel(): ?string
@@ -85,6 +93,8 @@ class DatabaseLog
     }
 
     /**
+     * Level setter.
+     *
      * @param string $level
      *
      * @return DatabaseLog
@@ -97,6 +107,8 @@ class DatabaseLog
     }
 
     /**
+     * Creation time getter.
+     *
      * @return \DateTimeInterface|null
      */
     public function getCreatedAt(): ?\DateTimeInterface
@@ -105,6 +117,8 @@ class DatabaseLog
     }
 
     /**
+     * Creation time setter.
+     *
      * @param \DateTimeInterface $createdAt
      *
      * @return DatabaseLog
@@ -117,14 +131,8 @@ class DatabaseLog
     }
 
     /**
-     * @ORM\PrePersist
-     */
-    public function onPrePersist(): void
-    {
-        $this->createdAt = new \DateTime();
-    }
-
-    /**
+     * Context getter.
+     *
      * @return array|null
      */
     public function getContext(): ?array
@@ -133,6 +141,8 @@ class DatabaseLog
     }
 
     /**
+     * Context setter.
+     *
      * @param array $context
      *
      * @return DatabaseLog
@@ -145,6 +155,8 @@ class DatabaseLog
     }
 
     /**
+     * Level name getter.
+     *
      * @return null|string
      */
     public function getLevelName(): ?string
@@ -153,6 +165,8 @@ class DatabaseLog
     }
 
     /**
+     * Level name setter.
+     *
      * @param string $levelName
      *
      * @return DatabaseLog
@@ -165,6 +179,8 @@ class DatabaseLog
     }
 
     /**
+     * Extra informations getter.
+     *
      * @return array|null
      */
     public function getExtra(): ?array
@@ -173,6 +189,8 @@ class DatabaseLog
     }
 
     /**
+     * Extra informations setter.
+     *
      * @param array $extra
      *
      * @return DatabaseLog
@@ -182,5 +200,15 @@ class DatabaseLog
         $this->extra = $extra;
 
         return $this;
+    }
+
+    /**
+     * Handles setting the creation time on object creation.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist(): void
+    {
+        $this->createdAt = new \DateTime();
     }
 }

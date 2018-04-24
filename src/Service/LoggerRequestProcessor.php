@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class LoggerRequestProcessor
 {
     /**
-     * @var RequestStack
+     * @var RequestStack Injected request stack
      */
     protected $request;
 
@@ -23,7 +23,9 @@ class LoggerRequestProcessor
     }
 
     /**
-     * @param array $record
+     * Add extra information to log from request.
+     *
+     * @param array $record Log object array.
      *
      * @return array
      */
