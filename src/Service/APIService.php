@@ -4,7 +4,6 @@ namespace CreamIO\BaseBundle\Service;
 
 use CreamIO\BaseBundle\Exceptions\APIError;
 use CreamIO\BaseBundle\Exceptions\APIException;
-use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
@@ -12,8 +11,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -38,6 +35,24 @@ class APIService
     public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
+    }
+
+    /**
+     * Converts camelCase to snake_case for constraints violations.
+     *
+     * @param string $input
+     *
+     * @return string
+     */
+    private function camelCaseToSnakeCase(string $input): string
+    {
+        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
+        $ret = $matches[0];
+        foreach ($ret as &$match) {
+            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+        }
+
+        return implode('_', $ret);
     }
 
     /**
@@ -66,7 +81,7 @@ class APIService
         $errors = [];
         foreach ($validationErrors as $error) {
             /* @var ConstraintViolation $error */
-            $errors[$error->getPropertyPath()] = $error->getMessage();
+            $errors[$this->camelCaseToSnakeCase($error->getPropertyPath())] = $error->getMessage();
         }
 
         $APIError = new APIError(Response::HTTP_BAD_REQUEST, APIError::VALIDATION_ERROR);
