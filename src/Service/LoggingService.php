@@ -35,8 +35,8 @@ class LoggingService extends AbstractProcessingHandler
         $logEntry->setMessage($record['message']);
         $logEntry->setStatusCode($record['level']);
         $logEntry->setLevelName($record['level_name']);
-        $logEntry->setExtra(json_encode($record['extra']));
-        $logEntry->setContext(json_encode($record['context']));
+        $logEntry->setExtra($record['extra']);
+        $logEntry->setContext($record['context']);
         $this->em->persist($logEntry);
         $this->em->flush();
     }

@@ -44,7 +44,7 @@ class DatabaseLog
     /**
      * @ORM\Column(type="json")
      *
-     * @var string
+     * @var array
      */
     private $context;
 
@@ -58,7 +58,7 @@ class DatabaseLog
     /**
      * @ORM\Column(type="json")
      *
-     * @var string
+     * @var array
      */
     private $extra;
 
@@ -149,7 +149,7 @@ class DatabaseLog
      *
      * @return array|null
      */
-    public function getContext(): ?string
+    public function getContext(): ?array
     {
         return $this->context;
     }
@@ -157,11 +157,11 @@ class DatabaseLog
     /**
      * Context setter.
      *
-     * @param string $context
+     * @param array $context
      *
      * @return DatabaseLog
      */
-    public function setContext(string $context): self
+    public function setContext(array $context): self
     {
         $this->context = $context;
 
@@ -197,7 +197,7 @@ class DatabaseLog
      *
      * @return array|null
      */
-    public function getExtra(): ?string
+    public function getExtra(): ?array
     {
         return $this->extra;
     }
@@ -205,11 +205,11 @@ class DatabaseLog
     /**
      * Extra informations setter.
      *
-     * @param string $extra
+     * @param array $extra
      *
      * @return DatabaseLog
      */
-    public function setExtra(string $extra): self
+    public function setExtra(array $extra): self
     {
         $this->extra = $extra;
 
