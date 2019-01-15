@@ -15,36 +15,50 @@ class DatabaseLog
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     private $message;
 
     /**
      * @ORM\Column(type="string", length=50)
+     *
+     * @var string
      */
     private $level;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
      */
     private $createdAt;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="json")
+     *
+     * @var string
      */
     private $context;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     private $levelName;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="json")
+     *
+     * @var string
      */
     private $extra;
 
@@ -135,7 +149,7 @@ class DatabaseLog
      *
      * @return array|null
      */
-    public function getContext(): ?array
+    public function getContext(): ?string
     {
         return $this->context;
     }
@@ -143,11 +157,11 @@ class DatabaseLog
     /**
      * Context setter.
      *
-     * @param array $context
+     * @param string $context
      *
      * @return DatabaseLog
      */
-    public function setContext(array $context): self
+    public function setContext(string $context): self
     {
         $this->context = $context;
 
@@ -183,7 +197,7 @@ class DatabaseLog
      *
      * @return array|null
      */
-    public function getExtra(): ?array
+    public function getExtra(): ?string
     {
         return $this->extra;
     }
@@ -191,11 +205,11 @@ class DatabaseLog
     /**
      * Extra informations setter.
      *
-     * @param array $extra
+     * @param string $extra
      *
      * @return DatabaseLog
      */
-    public function setExtra(array $extra): self
+    public function setExtra(string $extra): self
     {
         $this->extra = $extra;
 
