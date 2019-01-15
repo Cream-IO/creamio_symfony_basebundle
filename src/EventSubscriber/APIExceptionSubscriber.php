@@ -54,7 +54,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
         }
 
         $arrayToDisplay = $APIError->toArray();
-        $arrayToDisplay['additional-informations']['unique_log_id'] = $uniqueLogId;
+        $arrayToDisplay['additional-informations']['unique-log-id'] = $uniqueLogId;
         $this->logger->error($APIError->getType(), $arrayToDisplay);
         unset($arrayToDisplay['additional-informations']['technical']);
 
@@ -66,7 +66,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
                 'type' => 'Internal Server Error',
                 'reason' => 'An error occured, please contact us with id in additionnal informations.',
                 'additional-informations' => [
-                    'id' => $uniqueLogId,
+                    'unique-log-id' => $uniqueLogId,
                 ],
             ];
             $response = new JsonResponse(
