@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="CreamIO\BaseBundle\Repository\DatabaseLogRepository")
- * @ORM\Table(name="creamio_log")
+ * @ORM\Table(name="log")
  * @ORM\HasLifecycleCallbacks
  */
 class DatabaseLog
