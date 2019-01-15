@@ -33,7 +33,7 @@ class LoggingService extends AbstractProcessingHandler
     {
         $logEntry = new DatabaseLog();
         $logEntry->setMessage($record['message']);
-        $logEntry->setLevel($record['level']);
+        $logEntry->setStatusCode($record['level']);
         $logEntry->setLevelName($record['level_name']);
         $logEntry->setExtra(json_encode($record['extra']));
         $logEntry->setContext(json_encode($record['context']));

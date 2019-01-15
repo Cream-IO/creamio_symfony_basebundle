@@ -28,11 +28,11 @@ class DatabaseLog
     private $message;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="integer", length=50)
      *
-     * @var string
+     * @var int
      */
-    private $level;
+    private $statusCode;
 
     /**
      * @ORM\Column(type="datetime")
@@ -101,21 +101,21 @@ class DatabaseLog
      *
      * @return null|string
      */
-    public function getLevel(): ?string
+    public function getStatusCode(): ?string
     {
-        return $this->level;
+        return $this->statusCode;
     }
 
     /**
      * Level setter.
      *
-     * @param string $level
+     * @param string $statusCode
      *
      * @return DatabaseLog
      */
-    public function setLevel(string $level): self
+    public function setStatusCode(string $statusCode): self
     {
-        $this->level = $level;
+        $this->statusCode = $statusCode;
 
         return $this;
     }
