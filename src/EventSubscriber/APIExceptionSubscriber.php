@@ -75,7 +75,6 @@ class APIExceptionSubscriber implements EventSubscriberInterface
             );
         // Handle errors to display correctly to the user.
         } else {
-            $arrayToDisplay = $APIError->toArray();
             $response = new JsonResponse(
                 $arrayToDisplay,
                 $APIError->getStatusCode()
