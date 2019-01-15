@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Simple event subscriber that converts exceptions to JSON format.
@@ -40,6 +41,8 @@ class APIExceptionSubscriber implements EventSubscriberInterface
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $e = $event->getException();
+        $uniqueLogId = Uuid::uuid4();
+
         if ($e instanceof APIException) {
             $APIError = $e->getAPIError();
         } else {
@@ -49,13 +52,35 @@ class APIExceptionSubscriber implements EventSubscriberInterface
                 $e->getMessage()
             );
         }
-        $this->logger->error(sprintf($APIError->getType(), $APIError->getStatusCode()), $APIError->toArray());
+
         $arrayToDisplay = $APIError->toArray();
+        $arrayToDisplay['additional-informations']['unique_log_id'] = $uniqueLogId;
+        $this->logger->error($APIError->getType(), $arrayToDisplay);
         unset($arrayToDisplay['additional-informations']['technical']);
-        $response = new JsonResponse(
-            $arrayToDisplay,
-            $APIError->getStatusCode()
-        );
+
+        // Handle system errors and display generic message.
+        if (500 === $APIError->getStatusCode()) {
+            $errorMessage = [
+                'status' => 'error',
+                'code' => 500,
+                'type' => 'Internal Server Error',
+                'reason' => 'An error occured, please contact us with id in additionnal informations.',
+                'additional-informations' => [
+                    'id' => $uniqueLogId,
+                ],
+            ];
+            $response = new JsonResponse(
+                $errorMessage,
+                $APIError->getStatusCode()
+            );
+        // Handle errors to display correctly to the user.
+        } else {
+            $arrayToDisplay = $APIError->toArray();
+            $response = new JsonResponse(
+                $arrayToDisplay,
+                $APIError->getStatusCode()
+            );
+        }
         $response->headers->set('Content-Type', 'application/problem+json');
         $event->setResponse($response);
     }
