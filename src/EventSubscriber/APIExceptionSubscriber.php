@@ -41,7 +41,7 @@ class APIExceptionSubscriber implements EventSubscriberInterface
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $e = $event->getException();
-        $uniqueLogId = Uuid::uuid4();
+        $uniqueLogId = Uuid::uuid4()->toString();
 
         if ($e instanceof APIException) {
             $APIError = $e->getAPIError();
