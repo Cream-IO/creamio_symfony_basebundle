@@ -38,31 +38,13 @@ class APIService
     }
 
     /**
-     * Converts camelCase to snake_case for constraints violations.
-     *
-     * @param string $input
-     *
-     * @return string
-     */
-    private function camelCaseToSnakeCase(string $input): string
-    {
-        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
-        $ret = $matches[0];
-        foreach ($ret as &$match) {
-            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
-        }
-
-        return implode('_', $ret);
-    }
-
-    /**
      * Generates a JSONResponse for errored requests.
      *
      * This method is used for every methods since it handles all kind of errors
      *
      * @param int        $responseCode Response code to send (Constants defined in Response::class)
      * @param string     $reason       Error reason to return
-     * @param null|array $additionnal  Additionnal informations
+     * @param array|null $additionnal  Additionnal informations
      *
      * @return APIException
      */
@@ -81,7 +63,7 @@ class APIService
         $errors = [];
         foreach ($validationErrors as $error) {
             /* @var ConstraintViolation $error */
-            $errors[$this->camelCaseToSnakeCase($error->getPropertyPath())] = $error->getMessage();
+            $errors[$error->getPropertyPath()] = $error->getMessage();
         }
 
         $APIError = new APIError(Response::HTTP_BAD_REQUEST, APIError::VALIDATION_ERROR);
@@ -106,9 +88,7 @@ class APIService
     public function successWithResults($results, int $statusCode, string $resultsFor, Request $request, SerializerInterface $serializer = null): JsonResponse
     {
         if (null === $serializer) {
-            $serializer = SerializerBuilder::create()
-                ->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()))
-                ->build();
+            $serializer = $this->defaultSerializer();
         }
         $return = [
             'status' => 'success',
@@ -137,9 +117,7 @@ class APIService
     public function successWithoutResults(string $id, int $statusCode, Request $request, SerializerInterface $serializer = null): JsonResponse
     {
         if (null === $serializer) {
-            $serializer = SerializerBuilder::create()
-                ->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()))
-                ->build();
+            $serializer = $this->defaultSerializer();
         }
         $return = [
             'status' => 'success',
@@ -168,9 +146,7 @@ class APIService
     public function successWithoutResultsRedirected(string $id, Request $request, int $statusCode, string $redirectionURL, SerializerInterface $serializer = null): JsonResponse
     {
         if (null === $serializer) {
-            $serializer = SerializerBuilder::create()
-                ->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()))
-                ->build();
+            $serializer = $this->defaultSerializer();
         }
         $return = [
             'status' => 'success',
@@ -181,6 +157,16 @@ class APIService
         $serializedReturn = $serializer->serialize($return, 'json');
 
         return new JsonResponse($serializedReturn, Response::HTTP_CREATED, ['Location' => $redirectionURL], true);
+    }
+
+    private function defaultSerializer(): SerializerInterface
+    {
+        $serializer = SerializerBuilder::create()
+            ->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()))
+            ->setPropertyNamingStrategy(new \JMS\Serializer\Naming\IdenticalPropertyNamingStrategy())
+            ->build();
+
+        return $serializer;
     }
 
     /**
